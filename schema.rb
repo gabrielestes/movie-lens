@@ -8,6 +8,7 @@ class CreateMoviesTable < ActiveRecord::Migration[5.0]
       t.string :title
       t.string :release_date
       t.text :url
+    end
   end
 
   def down
