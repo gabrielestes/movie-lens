@@ -1,26 +1,6 @@
 require 'CSV'
 require_relative 'environment'
-require_relative 'models/tables'
-
-class RatingsData
-  def initialize(filename)
-    @filename = filename
-  end
-
-  def load_from_file
-    CSV.foreach(@filename, col_sep: "\t") do |line|
-      user_id = line[0]
-      movie_id = line[1]
-      score = line[2]
-
-    Rating.create(
-      user_id: user_id,
-      movie_id: movie_id,
-      score: score
-    )
-    end
-  end
-end
+require_relative 'classes'
 
 class MovieData
   def initialize(filename)
@@ -35,7 +15,7 @@ class MovieData
       url = line[3]
 
       Movie.create(
-        movie_id: movie_id,
+        id: movie_id,
         title: title,
         release_date: release_date,
         url: url
@@ -58,7 +38,7 @@ class UserData
       zipcode = line[4].to_i
 
       User.create(
-        user_id: user_id,
+        id: user_id,
         age: age,
         gender: gender,
         occupation: occupation,
@@ -68,10 +48,27 @@ class UserData
   end
 end
 
-def main
-  ratings_data = RatingsData.new('db/u.data')
+class RatingsData
+  def initialize(filename)
+    @filename = filename
+  end
 
-  ratings_data.load_from_file
+  def load_from_file
+    CSV.foreach(@filename, col_sep: "\t") do |line|
+      user_id = line[0]
+      movie_id = line[1]
+      score = line[2]
+
+    Rating.create(
+      user_id: user_id,
+      movie_id: movie_id,
+      score: score
+    )
+    end
+  end
+end
+
+def main
 
   movie_data = MovieData.new('db/u.item') # , ratings_data
 
@@ -80,6 +77,10 @@ def main
   user_data = UserData.new('db/u.user')
 
   user_data.load_from_file
+
+  ratings_data = RatingsData.new('db/u.data')
+
+  ratings_data.load_from_file
 
 end
 
