@@ -3,12 +3,12 @@ require 'active_record'
 
 class CreateMoviesTable < ActiveRecord::Migration[5.0]
   create_table :movies do |t|
-    t.integer :movie_id
+    # t.integer :movie_id
     t.string :title
     t.string :release_date
     t.text :url
   end
-  
+
   def down
     drop_table :movies
   end
@@ -17,7 +17,7 @@ end
 class CreateUsersTable < ActiveRecord::Migration[5.0]
   def up
     create_table :users do |t|
-      t.integer :user_id
+      # t.integer :user_id
       t.integer :age
       t.string :gender
       t.string :occupation
@@ -33,9 +33,9 @@ end
 class CreateRatingsTable < ActiveRecord::Migration[5.0]
   def up
     create_join_table :users, :movies, table_name: :ratings do |t|
-      t.references :user, index: true, foreign_key: true
-      t.references :movie, index: true, foreign_key: true
-      t.float :rating
+      t.belongs_to :user, index: true, foreign_key: true
+      t.belongs_to :movie, index: true, foreign_key: true
+      t.float :score
     end
   end
 
