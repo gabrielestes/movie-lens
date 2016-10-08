@@ -1,11 +1,21 @@
 require 'sinatra'
 require 'active_record'
-require_relative 'environment'
-require_relative 'classes'
+# require_relative 'environment'
+# require_relative 'classes'
+require_relative 'models/user'
+require_relative 'models/movie'
+require_relative 'models/rating'
 require 'json'
 
+database_config = YAML::load(File.open('config/database.yml'))
+
 before do
-  content_type :json
+ ActiveRecord::Base.establish_connection(ENV['DATABASE_URL'])
+ content_type :json
+end
+
+after do
+ ActiveRecord::Base.connection.close
 end
 
 get '/api/movies' do

@@ -2,11 +2,12 @@ require_relative 'environment'
 require 'active_record'
 
 class CreateMoviesTable < ActiveRecord::Migration[5.0]
-  create_table :movies do |t|
-    # t.integer :movie_id
-    t.string :title
-    t.string :release_date
-    t.text :url
+  def up
+    create_table :movies do |t|
+      # t.integer :movie_id
+      t.string :title
+      t.string :release_date
+      t.text :url
   end
 
   def down
