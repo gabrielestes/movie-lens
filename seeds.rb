@@ -1,6 +1,7 @@
-require 'CSV'
-require_relative 'environment'
+require 'csv'
+# require_relative 'environment'
 require_relative 'classes'
+require 'model'
 
 class MovieData
   def initialize(filename)
@@ -69,6 +70,7 @@ class RatingsData
 end
 
 def main
+  ActiveRecord::Base.establish_connection(ENV['DATABASE_URL']) # connection_details)
 
   movie_data = MovieData.new('db/u.item') # , ratings_data
 
@@ -81,6 +83,8 @@ def main
   ratings_data = RatingsData.new('db/u.data')
 
   ratings_data.load_from_file
+
+  ActiveRecord::Base.connection.close
 
 end
 
