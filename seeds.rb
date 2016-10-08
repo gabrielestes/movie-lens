@@ -1,7 +1,11 @@
 require 'csv'
 # require_relative 'environment'
 require_relative 'classes'
-require 'model'
+require_relative 'models/movie'
+require_relative 'models/rating'
+require_relative 'models/user'
+
+
 
 class MovieData
   def initialize(filename)
