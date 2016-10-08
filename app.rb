@@ -2,6 +2,11 @@ require 'sinatra'
 require 'active_record'
 require_relative 'environment'
 require_relative 'classes'
+require 'json'
+
+before do
+  content_type :json
+end
 
 get '/api/movies' do
   title = params['title']
@@ -17,12 +22,12 @@ get '/api/movies' do
   movies.to_json
 end
 
-get '/api/movies/:title' do
-  title = params['title']
-  release_date = params['release_date']
-  url = params['url']
+get '/api/movie' do
+  # title = params['title']
 
-  movie = Movie.find_by_id(title: title, )
+  movie = Movie.select(:id, :title).where("title LIKE ?", "%#{params['search']}%")
+
+  movie.to_json
 end
 
 post '/api/movies' do # write new review
