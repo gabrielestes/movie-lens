@@ -1,5 +1,3 @@
-require 'sinatra-activerecord'
-
 class CreateRatings < ActiveRecord::Migration[5.0]
   def up
     create_join_table :users, :movies, table_name: :ratings do |t|
