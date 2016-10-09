@@ -6,6 +6,7 @@ require_relative 'models/user'
 require_relative 'models/movie'
 require_relative 'models/rating'
 require 'json'
+require 'sinatra/cross_origin'
 
 database_config = YAML::load(File.open('config/database.yml'))
 
@@ -18,13 +19,19 @@ after do
  ActiveRecord::Base.connection.close
 end
 
+register Sinatra::CrossOrigin
+
+configure do
+  enable :cross_origin
+end
+
 get '/api/movies' do
   title = params['title']
   release_date = params['release_date']
   url = params['url']
 
   if !title.nil?
-    movies = Movies.where(title: title, release_date: release_date)
+    movies = Movie.where(title: title, release_date: release_date)
   else
     movies = Movie.all.order(title: :DESC)
   end
@@ -33,17 +40,25 @@ get '/api/movies' do
 end
 
 get '/api/movie' do
-  # title = params['title']
 
-  movie = Movie.select(:id, :title).where("title LIKE ?", "%#{params['search']}%")
-
+  movie = Movie.select(:id, :title).where("title LIKE ?", "%#{params['search']}%").first
+  p movie.get_average_rating
   movie.to_json
 end
 
-post '/api/movies' do # write new review
-  title = params['title']
-  release_date = params['release_date']
+post '/api/rate' do # write new review
   score = params['score']
+  movie_id = params['movie_id']
+  user_id = params['user_id']
 
-  rating = Rating.create(title: title, release_date: release_date)
+  rating = Rating.new(score: score, movie_id: movie_id, user_id: user_id)
+  if rating.save
+    rating.to_json
+  else
+    error 500
+  end
+end
+
+get '/api/rate' do
+  erb :rate
 end
