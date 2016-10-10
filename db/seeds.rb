@@ -4,6 +4,7 @@ require_relative 'classes'
 require_relative 'models/movie'
 require_relative 'models/rating'
 require_relative 'models/user'
+require 'pg'
 
 
 

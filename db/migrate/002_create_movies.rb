@@ -1,4 +1,5 @@
 require 'active_record'
+require 'pg'
 
 class CreateMovies < ActiveRecord::Migration[5.0]
   def up
