@@ -11,6 +11,8 @@
 
 #####Movie Lens Online API provides JSON objects for each feature listed above. This allows for front-end developers to configure a web page using information gathered from thousands of reviews, hundreds of movies, and hundreds of users.
 
+#####The files are organized to be deployable to Heroku, with migration files within 'db/migrate/', the movie, user, and rating models within '/models', and a 'public' folder for HTML, JS, and CSS files.
+
 ===
 
 ##Code
@@ -22,6 +24,23 @@ get '/api/movie' do
   movie = Movie.select(:id, :title).where("title LIKE ?", "%#{params['search']}%").first
   movie.get_average_rating
   movie.to_json
+end
+```
+
+This next snippet allows for users to create a rating.
+
+```Ruby
+post '/api/rate' do # write new review
+  score = params['score']
+  movie_id = params['movie_id']
+  user_id = params['user_id']
+
+  rating = Rating.new(score: score, movie_id: movie_id, user_id: user_id)
+  if rating.save
+    rating.to_json
+  else
+    error 500
+  end
 end
 ```
 
