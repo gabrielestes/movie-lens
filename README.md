@@ -9,6 +9,8 @@
 
 ##Format
 
+####This API is structured using the Sinatra Ruby framework, an open-source library that is frequently used to deploy web applications.
+
 ####Movie Lens Online API provides JSON objects for each feature listed above. This allows for front-end developers to configure a web page using information gathered from thousands of reviews, hundreds of movies, and hundreds of users.
 
 ####The files are organized to be deployable to Heroku, with migration files within 'db/migrate/', the movie, user, and rating models within '/models', and a 'public' folder for HTML, JS, and CSS files.
