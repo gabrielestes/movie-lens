@@ -1,13 +1,11 @@
 require 'csv'
-# require_relative 'environment'
 require_relative 'classes'
 require_relative 'models/movie'
 require_relative 'models/rating'
 require_relative 'models/user'
 require 'pg'
 
-
-
+# collects information unique to a movie title
 class MovieData
   def initialize(filename)
     @filename = filename
@@ -30,6 +28,7 @@ class MovieData
   end
 end
 
+# collects information unique to user ID
 class UserData
   def initialize(filename)
     @filename = filename
@@ -54,6 +53,7 @@ class UserData
   end
 end
 
+# collects rating instances
 class RatingsData
   def initialize(filename)
     @filename = filename
@@ -65,32 +65,28 @@ class RatingsData
       movie_id = line[1]
       score = line[2]
 
-    Rating.create(
-      user_id: user_id,
-      movie_id: movie_id,
-      score: score
-    )
+      Rating.create(
+        user_id: user_id,
+        movie_id: movie_id,
+        score: score
+      )
     end
   end
 end
 
 def main
-  ActiveRecord::Base.establish_connection(ENV['DATABASE_URL']) # connection_details)
+  ActiveRecord::Base.establish_connection(ENV['DATABASE_URL'])
 
-  movie_data = MovieData.new('db/u.item') # , ratings_data
-
+  movie_data = MovieData.new('db/u.item')
   movie_data.load_from_file
 
   user_data = UserData.new('db/u.user')
-
   user_data.load_from_file
 
   ratings_data = RatingsData.new('db/u.data')
-
   ratings_data.load_from_file
 
   ActiveRecord::Base.connection.close
-
 end
 
 main if __FILE__ == $PROGRAM_NAME

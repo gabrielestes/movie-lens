@@ -11,12 +11,12 @@ require 'pg'
 database_config = YAML::load(File.open('config/database.yml'))
 
 before do
- ActiveRecord::Base.establish_connection(ENV['DATABASE_URL'])
- content_type :json
+  ActiveRecord::Base.establish_connection(ENV['DATABASE_URL'])
+  content_type :json
 end
 
 after do
- ActiveRecord::Base.connection.close
+  ActiveRecord::Base.connection.close
 end
 
 get '/api/movies' do
@@ -25,7 +25,7 @@ get '/api/movies' do
   url = params['url']
 
   if !title.nil?
-    movies = Movie.where(title: title, release_date: release_date)
+    movies = Movie.where(title: title, release_date: release_date, url: url)
   else
     movies = Movie.all.order(title: :DESC)
   end
@@ -34,14 +34,23 @@ get '/api/movies' do
 end
 
 get '/api/movie' do
-
   movie = Movie.select(:id, :title).where("title LIKE ?", "%#{params['search']}%").first
   movie.get_average_rating
   movie.to_json
 end
 
-post '/api/movie/new'
+post '/api/movie/new' do
+  title = params['title']
+  release_date = params['release_date']
+  url = params['url']
 
+  movie = Movie.new(title: title, release_date: release_date, url: url)
+  if movie.save
+    movie.to_json
+  else
+    error 500
+  end
+end
 
 post '/api/rate' do # write new review
   score = params['score']
