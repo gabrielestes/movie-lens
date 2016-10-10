@@ -55,7 +55,7 @@ http://grouplens.org/datasets/movielens/
 ===
 
 ##Languages
-####Written in Ruby and SQL
+####Written in Ruby
 
 
 ##Author
